@@ -110,21 +110,44 @@ class OneLogin_Saml2_Authn_Request(object):
     ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
     AssertionConsumerServiceURL="%(assertion_url)s"
     %(attr_consuming_service_str)s>
-    <saml:Issuer>%(entity_id)s</saml:Issuer>%(nameid_policy_str)s%(requested_authn_context_str)s
+    <saml:Issuer>%(entity_id)s</saml:Issuer>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+		<SignedInfo>
+			<CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+			<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+			<Reference URI="#_662a3468-5161-4717-9bb2-7950924ca704">
+				<Transforms>
+					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+					<Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+						<InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" />
+					</Transform>
+				</Transforms>
+				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+				<DigestValue></DigestValue>
+			</Reference>
+		</SignedInfo>
+		<SignatureValue></SignatureValue>
+		<KeyInfo>
+			<X509Data>
+				<X509Certificate></X509Certificate>
+			</X509Data>
+		</KeyInfo>
+	</Signature>
+    %(nameid_policy_str)s%(requested_authn_context_str)s
 </samlp:AuthnRequest>""" % \
-            {
-                'id': uid,
-                'provider_name': provider_name_str,
-                'force_authn_str': force_authn_str,
-                'is_passive_str': is_passive_str,
-                'issue_instant': issue_instant,
-                'destination': destination,
-                'assertion_url': sp_data['assertionConsumerService']['url'],
-                'entity_id': sp_data['entityId'],
-                'nameid_policy_str': nameid_policy_str,
-                'requested_authn_context_str': requested_authn_context_str,
-                'attr_consuming_service_str': attr_consuming_service_str
-            }
+                  {
+                      'id': uid,
+                      'provider_name': provider_name_str,
+                      'force_authn_str': force_authn_str,
+                      'is_passive_str': is_passive_str,
+                      'issue_instant': issue_instant,
+                      'destination': destination,
+                      'assertion_url': sp_data['assertionConsumerService']['url'],
+                      'entity_id': sp_data['entityId'],
+                      'nameid_policy_str': nameid_policy_str,
+                      'requested_authn_context_str': requested_authn_context_str,
+                      'attr_consuming_service_str': attr_consuming_service_str
+                  }
 
         self.__authn_request = request
 
