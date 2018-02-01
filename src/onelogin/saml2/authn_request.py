@@ -100,6 +100,7 @@ class OneLogin_Saml2_Authn_Request(object):
         if 'attributeConsumingService' in sp_data and sp_data['attributeConsumingService']:
             attr_consuming_service_str = 'AttributeConsumingServiceIndex="1"'
 
+        certificate = sp_data["x509cert"].replace("-----BEGIN CERTIFICATE-----\n", "").replace("-----END CERTIFICATE-----", "")
         request = """<samlp:AuthnRequest
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
@@ -112,27 +113,27 @@ class OneLogin_Saml2_Authn_Request(object):
     %(attr_consuming_service_str)s>
     <saml:Issuer>%(entity_id)s</saml:Issuer>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
-		<SignedInfo>
-			<CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
-			<SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-			<Reference URI="#_662a3468-5161-4717-9bb2-7950924ca704">
-				<Transforms>
-					<Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
-					<Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
-						<InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" />
-					</Transform>
-				</Transforms>
-				<DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-				<DigestValue></DigestValue>
-			</Reference>
-		</SignedInfo>
-		<SignatureValue></SignatureValue>
-		<KeyInfo>
-			<X509Data>
-				<X509Certificate></X509Certificate>
-			</X509Data>
-		</KeyInfo>
-	</Signature>
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#_662a3468-5161-4717-9bb2-7950924ca704">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                    </Transform>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>8/BO54wps3lGNqkiNr0ew3ZmKrw=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>cdQgl3RfnrkTvw1aIr0pIK/DhR/1qPF14487kILq7zypdiOp7vTqzFGdHqXBcVaDeKRlG1LvlHXepFzJYO/v9Ikef40TfIbUXoCLQAQ4HuDyCtwn+uCKUJ4JjihUzkHnGm2R1u+8GIbXrkZg4iIkzUEh5A+EJZRdYgoKJaZ7/2egs/7yP1jUHgcUCgMKeu3aLURGDH3KmLW4YHuheCKlSSZuYLHvUJRjVl+F7T11gwmOcQ1+r8Z+L/mpheGjBOZvRcXqBbOtxvIcXP71nILppIatlgNEXi3X+Gn5twR55AcJgGkR9ClyTxZ08cC3EfycnEub6ksQyQU7IDXUWfLmzg==</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>%(certificate)s</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
     %(nameid_policy_str)s%(requested_authn_context_str)s
 </samlp:AuthnRequest>""" % \
                   {
@@ -146,7 +147,8 @@ class OneLogin_Saml2_Authn_Request(object):
                       'entity_id': sp_data['entityId'],
                       'nameid_policy_str': nameid_policy_str,
                       'requested_authn_context_str': requested_authn_context_str,
-                      'attr_consuming_service_str': attr_consuming_service_str
+                      'attr_consuming_service_str': attr_consuming_service_str,
+                      'certificate': certificate
                   }
 
         self.__authn_request = request
