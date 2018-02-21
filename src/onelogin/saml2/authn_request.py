@@ -127,7 +127,7 @@ class OneLogin_Saml2_Authn_Request(object):
                 <DigestValue>4eXOfTLQRsDf3inV+aStvuCdLuo=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>ThIRfbxRUsGuAVUg3piqY8eGZ/55OqdzyLY+bOXqBsTRWbd8xAJ2YA2sTAmy0eOmNJCCDcxhRvRjSCAk1nqotv++0d8m9zshHqe4rXnBOycHvPgw55rP3lbhrhdC8yzbDVOZ0o5nisgonI1JOKUKT+ugT/4sWh/wA8+CkpJ+XCc=</SignatureValue>
+        <SignatureValue>qT2MhRX6NJHbtbdPWDrJsJc6iX/Mq4kLH7UnIps3oPRM5fg1CLn1kxXCXworeHMjnIBr1WEjiZYaz3WjJoNzswwVfkDuKZYPQ0LzyARn+7p2UogVBVX8iLlDwDdT/bfzqUjZtQm+6c96+feWTDt0oUqRquv0OAL0j6ufZBkd3wo=</SignatureValue>
         <KeyInfo>
             <X509Data>
                 <X509Certificate>%(certificate)s</X509Certificate>
