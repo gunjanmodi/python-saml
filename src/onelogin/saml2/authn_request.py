@@ -124,10 +124,10 @@ class OneLogin_Saml2_Authn_Request(object):
                     </Transform>
                 </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-                <DigestValue>8/BO54wps3lGNqkiNr0ew3ZmKrw=</DigestValue>
+                <DigestValue>4eXOfTLQRsDf3inV+aStvuCdLuo=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>cdQgl3RfnrkTvw1aIr0pIK/DhR/1qPF14487kILq7zypdiOp7vTqzFGdHqXBcVaDeKRlG1LvlHXepFzJYO/v9Ikef40TfIbUXoCLQAQ4HuDyCtwn+uCKUJ4JjihUzkHnGm2R1u+8GIbXrkZg4iIkzUEh5A+EJZRdYgoKJaZ7/2egs/7yP1jUHgcUCgMKeu3aLURGDH3KmLW4YHuheCKlSSZuYLHvUJRjVl+F7T11gwmOcQ1+r8Z+L/mpheGjBOZvRcXqBbOtxvIcXP71nILppIatlgNEXi3X+Gn5twR55AcJgGkR9ClyTxZ08cC3EfycnEub6ksQyQU7IDXUWfLmzg==</SignatureValue>
+        <SignatureValue>ThIRfbxRUsGuAVUg3piqY8eGZ/55OqdzyLY+bOXqBsTRWbd8xAJ2YA2sTAmy0eOmNJCCDcxhRvRjSCAk1nqotv++0d8m9zshHqe4rXnBOycHvPgw55rP3lbhrhdC8yzbDVOZ0o5nisgonI1JOKUKT+ugT/4sWh/wA8+CkpJ+XCc=</SignatureValue>
         <KeyInfo>
             <X509Data>
                 <X509Certificate>%(certificate)s</X509Certificate>
