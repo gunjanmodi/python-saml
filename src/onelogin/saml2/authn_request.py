@@ -107,11 +107,12 @@ class OneLogin_Saml2_Authn_Request(object):
     ID="%(id)s"
     Version="2.0"%(provider_name)s%(force_authn_str)s%(is_passive_str)s
     IssueInstant="%(issue_instant)s"
-    Destination="%(destination)s"
+    Destination="https://smartidqa2.paci.gov.kw/idp/SSO.saml2"
     ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
-    AssertionConsumerServiceURL="%(assertion_url)s"
-    %(attr_consuming_service_str)s>
-    <saml:Issuer>%(entity_id)s</saml:Issuer>
+    AssertionConsumerServiceURL="http://api.mofa2.mykuwaitnet.net/saml?acs"
+    AttributeConsumingServiceIndex="1"
+    >
+    <saml:Issuer>http://api.mofa2.mykuwaitnet.net/</saml:Issuer>
     <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
         <SignedInfo>
             <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
@@ -127,7 +128,7 @@ class OneLogin_Saml2_Authn_Request(object):
                 <DigestValue>4eXOfTLQRsDf3inV+aStvuCdLuo=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>qT2MhRX6NJHbtbdPWDrJsJc6iX/Mq4kLH7UnIps3oPRM5fg1CLn1kxXCXworeHMjnIBr1WEjiZYaz3WjJoNzswwVfkDuKZYPQ0LzyARn+7p2UogVBVX8iLlDwDdT/bfzqUjZtQm+6c96+feWTDt0oUqRquv0OAL0j6ufZBkd3wo=</SignatureValue>
+        <SignatureValue>ThIRfbxRUsGuAVUg3piqY8eGZ/55OqdzyLY+bOXqBsTRWbd8xAJ2YA2sTAmy0eOmNJCCDcxhRvRjSCAk1nqotv++0d8m9zshHqe4rXnBOycHvPgw55rP3lbhrhdC8yzbDVOZ0o5nisgonI1JOKUKT+ugT/4sWh/wA8+CkpJ+XCc=</SignatureValue>
         <KeyInfo>
             <X509Data>
                 <X509Certificate>%(certificate)s</X509Certificate>
