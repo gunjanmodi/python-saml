@@ -117,7 +117,7 @@ class OneLogin_Saml2_Authn_Request(object):
         <SignedInfo>
             <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
             <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
-            <Reference URI="%(id)s">
+            <Reference URI="#%(id)s">
                 <Transforms>
                     <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
                     <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
