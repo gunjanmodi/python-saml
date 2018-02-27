@@ -125,10 +125,10 @@ class OneLogin_Saml2_Authn_Request(object):
                     </Transform>
                 </Transforms>
                 <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
-                <DigestValue>4eXOfTLQRsDf3inV+aStvuCdLuo=</DigestValue>
+                <DigestValue>Eph2yJzbGPhlVQThAl1OHWF/bmM=</DigestValue>
             </Reference>
         </SignedInfo>
-        <SignatureValue>ThIRfbxRUsGuAVUg3piqY8eGZ/55OqdzyLY+bOXqBsTRWbd8xAJ2YA2sTAmy0eOmNJCCDcxhRvRjSCAk1nqotv++0d8m9zshHqe4rXnBOycHvPgw55rP3lbhrhdC8yzbDVOZ0o5nisgonI1JOKUKT+ugT/4sWh/wA8+CkpJ+XCc=</SignatureValue>
+        <SignatureValue>owbA6nJRn8TMQojq27rkqMBk+z2s8Fly1F68MEMd1InH6vFpVQqvwn7NrEP7YEJnTiHH3y8vrQvpHqBYuXoJjoZpjLdmV3jlprrzjDF+ZFUeqqfUO9h8JAVPTtxwrIEj0bfzH76pCU9h+Fu0kEekQ0UjKGHUEOZbd1+W7lmcc7U=</SignatureValue>
         <KeyInfo>
             <X509Data>
                 <X509Certificate>%(certificate)s</X509Certificate>
