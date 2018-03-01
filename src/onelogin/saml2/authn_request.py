@@ -48,8 +48,8 @@ class OneLogin_Saml2_Authn_Request(object):
         self.__id = uid
         issue_instant = OneLogin_Saml2_Utils.parse_time_to_SAML(OneLogin_Saml2_Utils.now())
 
-        destination = idp_data['singleSignOnService']['url']
-
+        # destination = idp_data['singleSignOnService']['url']
+        destination = 'https://fed.paci.gov.kw/idp/SSO.saml2'
         provider_name_str = ''
         organization_data = settings.get_organization()
         if isinstance(organization_data, dict) and organization_data:
@@ -59,7 +59,7 @@ class OneLogin_Saml2_Authn_Request(object):
             else:
                 lang = langs[0]
             if 'displayname' in organization_data[lang] and organization_data[lang]['displayname'] is not None:
-                provider_name_str = "\n" + 'ProviderName="%s"' % organization_data[lang]['displayname']
+                provider_name_str = "\n" + '    ProviderName="%s"' % organization_data[lang]['displayname']
 
         force_authn_str = ''
         if force_authn is True:
@@ -75,7 +75,10 @@ class OneLogin_Saml2_Authn_Request(object):
             if 'wantNameIdEncrypted' in security and security['wantNameIdEncrypted']:
                 name_id_policy_format = OneLogin_Saml2_Constants.NAMEID_ENCRYPTED
 
-            nameid_policy_str = """<samlp:NameIDPolicy Format="%s" AllowCreate="true"/>""" % name_id_policy_format
+            nameid_policy_str = """
+    <samlp:NameIDPolicy
+        Format="%s"
+        AllowCreate="true" />""" % name_id_policy_format
 
         requested_authn_context_str = ''
         if 'requestedAuthnContext' in security.keys() and security['requestedAuthnContext'] is not False:
@@ -84,19 +87,59 @@ class OneLogin_Saml2_Authn_Request(object):
                 authn_comparison = security['requestedAuthnContextComparison']
 
             if security['requestedAuthnContext'] is True:
-                requested_authn_context_str = "\n" + """<samlp:RequestedAuthnContext Comparison="%s"><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></samlp:RequestedAuthnContext>""" % authn_comparison
+                requested_authn_context_str = "\n" + """    <samlp:RequestedAuthnContext Comparison="%s">
+        <saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef>
+    </samlp:RequestedAuthnContext>""" % authn_comparison
             else:
-                requested_authn_context_str = "\n" + '<samlp:RequestedAuthnContext Comparison="%s">' % authn_comparison
+                requested_authn_context_str = "\n" + '     <samlp:RequestedAuthnContext Comparison="%s">' % authn_comparison
                 for authn_context in security['requestedAuthnContext']:
                     requested_authn_context_str += '<saml:AuthnContextClassRef>%s</saml:AuthnContextClassRef>' % authn_context
-                requested_authn_context_str += '</samlp:RequestedAuthnContext>'
+                requested_authn_context_str += '    </samlp:RequestedAuthnContext>'
 
         attr_consuming_service_str = ''
         if 'attributeConsumingService' in sp_data and sp_data['attributeConsumingService']:
             attr_consuming_service_str = 'AttributeConsumingServiceIndex="1"'
 
         certificate = sp_data["x509cert"].replace("-----BEGIN CERTIFICATE-----\n", "").replace("-----END CERTIFICATE-----", "")
-        request = """<samlp:AuthnRequest xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol" xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion" ID="%(id)s" Version="2.0"%(provider_name)s%(force_authn_str)s%(is_passive_str)s IssueInstant="%(issue_instant)s" Destination="https://smartidqa2.paci.gov.kw/idp/SSO.saml2" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="http://api.mofa2.mykuwaitnet.net/saml?acs" AttributeConsumingServiceIndex="1"><saml:Issuer>http://api.mofa2.mykuwaitnet.net/</saml:Issuer><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI="#%(id)s"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"><InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transform></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>Eph2yJzbGPhlVQThAl1OHWF/bmM=</DigestValue></Reference></SignedInfo><SignatureValue>owbA6nJRn8TMQojq27rkqMBk+z2s8Fly1F68MEMd1InH6vFpVQqvwn7NrEP7YEJnTiHH3y8vrQvpHqBYuXoJjoZpjLdmV3jlprrzjDF+ZFUeqqfUO9h8JAVPTtxwrIEj0bfzH76pCU9h+Fu0kEekQ0UjKGHUEOZbd1+W7lmcc7U=</SignatureValue><KeyInfo><X509Data><X509Certificate>%(certificate)s</X509Certificate></X509Data></KeyInfo></Signature>%(nameid_policy_str)s%(requested_authn_context_str)s</samlp:AuthnRequest>""" % \
+        signature_value = 'owbA6nJRn8TMQojq27rkqMBk+z2s8Fly1F68MEMd1InH6vFpVQqvwn7NrEP7YEJnTiHH3y8vrQvpHqBYuXoJjoZpjLdmV3jlprrzjDF+ZFUeqqfUO9h8JAVPTtxwrIEj0bfzH76pCU9h+Fu0kEekQ0UjKGHUEOZbd1+W7lmcc7U='
+        assertion__consumer_service_url = 'http://api.mofa2.mykuwaitnet.net/saml?acs'
+        digest_value = 'Eph2yJzbGPhlVQThAl1OHWF/bmM='
+        request = """<samlp:AuthnRequest
+    xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
+    xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
+    ID="%(id)s"
+    Version="2.0"%(provider_name)s%(force_authn_str)s%(is_passive_str)s
+    IssueInstant="%(issue_instant)s"
+    Destination="https://smartidqa2.paci.gov.kw/idp/SSO.saml2"
+    ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST"
+    AssertionConsumerServiceURL="http://api.mofa2.mykuwaitnet.net/saml?acs"
+    AttributeConsumingServiceIndex="1"
+    >
+    <saml:Issuer>http://api.mofa2.mykuwaitnet.net/</saml:Issuer>
+    <Signature xmlns="http://www.w3.org/2000/09/xmldsig#">
+        <SignedInfo>
+            <CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" />
+            <SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" />
+            <Reference URI="#%(id)s">
+                <Transforms>
+                    <Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" />
+                    <Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#">
+                        <InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" />
+                    </Transform>
+                </Transforms>
+                <DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" />
+                <DigestValue>Eph2yJzbGPhlVQThAl1OHWF/bmM=</DigestValue>
+            </Reference>
+        </SignedInfo>
+        <SignatureValue>owbA6nJRn8TMQojq27rkqMBk+z2s8Fly1F68MEMd1InH6vFpVQqvwn7NrEP7YEJnTiHH3y8vrQvpHqBYuXoJjoZpjLdmV3jlprrzjDF+ZFUeqqfUO9h8JAVPTtxwrIEj0bfzH76pCU9h+Fu0kEekQ0UjKGHUEOZbd1+W7lmcc7U=</SignatureValue>
+        <KeyInfo>
+            <X509Data>
+                <X509Certificate>%(certificate)s</X509Certificate>
+            </X509Data>
+        </KeyInfo>
+    </Signature>
+    %(nameid_policy_str)s%(requested_authn_context_str)s
+</samlp:AuthnRequest>""" % \
                   {
                       'id': uid,
                       'provider_name': provider_name_str,
@@ -109,7 +152,32 @@ class OneLogin_Saml2_Authn_Request(object):
                       'nameid_policy_str': nameid_policy_str,
                       'requested_authn_context_str': requested_authn_context_str,
                       'attr_consuming_service_str': attr_consuming_service_str,
-                      'certificate': certificate
+                      'certificate': certificate,
+                      'signature_value': signature_value,
+                      'digest_value':digest_value,
+                      'assertion__consumer_service_url': assertion__consumer_service_url
+                  }
+
+
+        request_old = """
+        <samlp:AuthnRequest ID="%(id)s" Version="2.0" IssueInstant="%(issue_instant)s" Destination="%(destination)s" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="%(assertion__consumer_service_url)s" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">PACIPortal</saml:Issuer><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI="#%(id)s"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"><InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transform></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>%(digest_value)s</DigestValue></Reference></SignedInfo><SignatureValue>%(signature_value)s</SignatureValue><KeyInfo><X509Data><X509Certificate>%(certificate)s</X509Certificate></X509Data></KeyInfo></Signature><samlp:NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" AllowCreate="true" /></samlp:AuthnRequest>
+        """ % \
+                  {
+                      'id': uid,
+                      'provider_name': provider_name_str,
+                      'force_authn_str': force_authn_str,
+                      'is_passive_str': is_passive_str,
+                      'issue_instant': issue_instant,
+                      'destination': destination,
+                      'assertion_url': sp_data['assertionConsumerService']['url'],
+                      'entity_id': sp_data['entityId'],
+                      'nameid_policy_str': nameid_policy_str,
+                      'requested_authn_context_str': requested_authn_context_str,
+                      'attr_consuming_service_str': attr_consuming_service_str,
+                      'certificate': certificate,
+                      'signature_value': signature_value,
+                      'digest_value':digest_value,
+                      'assertion__consumer_service_url': assertion__consumer_service_url
                   }
 
         self.__authn_request = request
