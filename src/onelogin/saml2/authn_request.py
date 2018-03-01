@@ -104,7 +104,7 @@ class OneLogin_Saml2_Authn_Request(object):
         signature_value = 'owbA6nJRn8TMQojq27rkqMBk+z2s8Fly1F68MEMd1InH6vFpVQqvwn7NrEP7YEJnTiHH3y8vrQvpHqBYuXoJjoZpjLdmV3jlprrzjDF+ZFUeqqfUO9h8JAVPTtxwrIEj0bfzH76pCU9h+Fu0kEekQ0UjKGHUEOZbd1+W7lmcc7U='
         assertion__consumer_service_url = 'http://api.mofa2.mykuwaitnet.net/saml?acs'
         digest_value = 'Eph2yJzbGPhlVQThAl1OHWF/bmM='
-        request = """<samlp:AuthnRequest
+        request_old = """<samlp:AuthnRequest
     xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"
     xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion"
     ID="%(id)s"
@@ -159,7 +159,7 @@ class OneLogin_Saml2_Authn_Request(object):
                   }
 
 
-        request_old = """
+        request = """
         <samlp:AuthnRequest ID="%(id)s" Version="2.0" IssueInstant="%(issue_instant)s" Destination="%(destination)s" ForceAuthn="false" IsPassive="false" ProtocolBinding="urn:oasis:names:tc:SAML:2.0:bindings:HTTP-POST" AssertionConsumerServiceURL="%(assertion__consumer_service_url)s" xmlns:samlp="urn:oasis:names:tc:SAML:2.0:protocol"><saml:Issuer xmlns:saml="urn:oasis:names:tc:SAML:2.0:assertion">PACIPortal</saml:Issuer><Signature xmlns="http://www.w3.org/2000/09/xmldsig#"><SignedInfo><CanonicalizationMethod Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#" /><SignatureMethod Algorithm="http://www.w3.org/2000/09/xmldsig#rsa-sha1" /><Reference URI="#%(id)s"><Transforms><Transform Algorithm="http://www.w3.org/2000/09/xmldsig#enveloped-signature" /><Transform Algorithm="http://www.w3.org/2001/10/xml-exc-c14n#"><InclusiveNamespaces PrefixList="#default samlp saml ds xs xsi" xmlns="http://www.w3.org/2001/10/xml-exc-c14n#" /></Transform></Transforms><DigestMethod Algorithm="http://www.w3.org/2000/09/xmldsig#sha1" /><DigestValue>%(digest_value)s</DigestValue></Reference></SignedInfo><SignatureValue>%(signature_value)s</SignatureValue><KeyInfo><X509Data><X509Certificate>%(certificate)s</X509Certificate></X509Data></KeyInfo></Signature><samlp:NameIDPolicy Format="urn:oasis:names:tc:SAML:1.1:nameid-format:unspecified" AllowCreate="true" /><samlp:RequestedAuthnContext Comparison="exact"><saml:AuthnContextClassRef>urn:oasis:names:tc:SAML:2.0:ac:classes:PasswordProtectedTransport</saml:AuthnContextClassRef></samlp:RequestedAuthnContext>AttributeConsumingServiceIndex="1"</samlp:AuthnRequest>
         """ % \
                   {
@@ -176,7 +176,7 @@ class OneLogin_Saml2_Authn_Request(object):
                       'attr_consuming_service_str': attr_consuming_service_str,
                       'certificate': certificate,
                       'signature_value': signature_value,
-                      'digest_value':digest_value,
+                      'digest_value': digest_value,
                       'assertion__consumer_service_url': assertion__consumer_service_url
                   }
 
